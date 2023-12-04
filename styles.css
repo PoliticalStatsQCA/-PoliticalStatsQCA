@@ -1,0 +1,8 @@
+/* styles.css */
+.cuadro-destacado {
+  background-color: #f9f9f9; /* Color de fondo gris claro */
+  border: 1px solid #ddd; /* Borde gris */
+  padding: 15px; /* Espacio interior */
+  border-radius: 5px; /* Bordes redondeados */
+  margin-bottom: 15px; /* Espacio debajo del cuadro */
+}

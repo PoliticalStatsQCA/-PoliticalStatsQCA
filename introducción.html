@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 2 Introducción | Manual de Construcción de Índices Compuestos</title>
+  <meta name="description" content="Guía práctica para crear índices compuestos con R" />
+  <meta name="generator" content="bookdown 0.36 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 2 Introducción | Manual de Construcción de Índices Compuestos" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Guía práctica para crear índices compuestos con R" />
+  <meta name="github-repo" content="lesflores/composite_indicator_r" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 2 Introducción | Manual de Construcción de Índices Compuestos" />
+  
+  <meta name="twitter:description" content="Guía práctica para crear índices compuestos con R" />
+  
+
+<meta name="author" content="Lesly Estefania Flores Rivera" />
+
+
+<meta name="date" content="2023-01-01" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="imputación-de-datos-faltantes.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Índices Compuestos</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Sobre este Manual</a></li>
+<li class="chapter" data-level="2" data-path="introducción.html"><a href="introducción.html"><i class="fa fa-check"></i><b>2</b> Introducción</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introducción.html"><a href="introducción.html#datos-ficticios-para-la-construcción-del-índice-compuesto"><i class="fa fa-check"></i><b>2.1</b> Datos Ficticios para la Construcción del Índice Compuesto</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="imputación-de-datos-faltantes.html"><a href="imputación-de-datos-faltantes.html"><i class="fa fa-check"></i><b>3</b> Imputación de Datos Faltantes</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="imputación-de-datos-faltantes.html"><a href="imputación-de-datos-faltantes.html#imputación-por-media-y-moda"><i class="fa fa-check"></i><b>3.1</b> Imputación por Media y Moda</a></li>
+<li class="chapter" data-level="3.2" data-path="imputación-de-datos-faltantes.html"><a href="imputación-de-datos-faltantes.html#imputación-por-modelos-de-regresión"><i class="fa fa-check"></i><b>3.2</b> Imputación por Modelos de Regresión</a></li>
+<li class="chapter" data-level="3.3" data-path="imputación-de-datos-faltantes.html"><a href="imputación-de-datos-faltantes.html#paquete-amelia"><i class="fa fa-check"></i><b>3.3</b> Paquete Amelia</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="análisis-multivariado.html"><a href="análisis-multivariado.html"><i class="fa fa-check"></i><b>4</b> Análisis Multivariado</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="análisis-multivariado.html"><a href="análisis-multivariado.html#análisis-factorial-para-datos-mixtos"><i class="fa fa-check"></i><b>4.1</b> Análisis Factorial para Datos Mixtos</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="normalización.html"><a href="normalización.html"><i class="fa fa-check"></i><b>5</b> Normalización</a></li>
+<li class="chapter" data-level="6" data-path="selección-de-variables.html"><a href="selección-de-variables.html"><i class="fa fa-check"></i><b>6</b> Selección de Variables</a></li>
+<li class="chapter" data-level="7" data-path="ponderación-y-agregación.html"><a href="ponderación-y-agregación.html"><i class="fa fa-check"></i><b>7</b> Ponderación y Agregación</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="ponderación-y-agregación.html"><a href="ponderación-y-agregación.html#enfoque-1-inclusión-de-todas-las-variables"><i class="fa fa-check"></i><b>7.1</b> Enfoque 1: Inclusión de todas las Variables</a></li>
+<li class="chapter" data-level="7.2" data-path="ponderación-y-agregación.html"><a href="ponderación-y-agregación.html#enfoque-2-selección-de-las-variables-más-significativas-identificadas-en-el-famd"><i class="fa fa-check"></i><b>7.2</b> Enfoque 2: Selección de las variables más significativas identificadas en el FAMD</a></li>
+<li class="chapter" data-level="7.3" data-path="ponderación-y-agregación.html"><a href="ponderación-y-agregación.html#enfoque-3-varianza-explicativa-famd"><i class="fa fa-check"></i><b>7.3</b> Enfoque 3: Varianza Explicativa FAMD</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="validación.html"><a href="validación.html"><i class="fa fa-check"></i><b>8</b> Validación</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Manual de Construcción de Índices Compuestos</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="introducción" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">Capítulo 2</span> Introducción<a href="introducción.html#introducción" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>El <em>Manual de Construcción de Índices Compuestos</em> es una guía para el desarrollo de índices que combinan múltiples indicadores. Este documento detalla métodos y prácticas para esclarecer la construcción de índices compuestos, con un enfoque en la mejora de técnicas estadísticas.</p>
+<p>Centrándose en brindar recomendaciones prácticas, el manual se sirve de R como herramienta analítica, estructurando cada etapa del proceso de desarrollo para promover la transparencia y reducir el riesgo de malinterpretación de los datos.</p>
+<p>Los elementos en la construcción de índices compuestos, según se detallan en el manual, incluyen:</p>
+<p><strong>Imputación de datos faltantes:</strong> Se examinan estrategias para abordar la falta de datos completos.</p>
+<p><strong>Análisis multivariado:</strong> Se realiza <code>FAMD</code> para entender la estructura de los datos y justificar las decisiones de ponderación y agregación.</p>
+<p><strong>Normalización:</strong> Se describen métodos para hacer que los indicadores sean comparables.</p>
+<p><strong>Selección de variables:</strong> Se describe entre usar todas las variables o solo las más influyentes</p>
+<p><strong>Ponderación y agregación:</strong> Se discute cómo unir los indicadores.</p>
+<p><strong>Validación:</strong> Se realizan pruebas de robustez.</p>
+<p>Para ilustrar estos conceptos de forma práctica, el manual incorpora un <em>caso de estudio ficticio</em>, el <em>Índice de Democracia Electoral en el universo de Star Trek (IST)</em>, seleccionado por su estructura simple y el enfoque en la dimensión electoral de la democracia, tal como se define en el proyecto V-Dem.</p>
+<p>Los indicadores extraídos del Índice de Democracia Electoral de V-dem representan aspectos clave para garantizar que las y los gobernantes rindan cuentas a la ciudadanía. Estos incluyen: competiciones electorales justas, un sufragio extensivo, la libertad y legalidad de las agrupaciones políticas y civiles, la ausencia de fraude electoral y la influencia de los resultados electorales en la conformación del liderazgo ejecutivo, junto con la libertad de expresión y el acceso a medios de comunicación independientes que proporcionan puntos de vista alternativos en el ámbito político <span class="citation">(<a href="#ref-teorell2023">Teorell et al. 2023</a>)</span>. Tales indicadores, que en el contexto de V-Dem sirven para evaluar prácticas democráticas en nuestra realidad, son adaptados en este ejercicio para reflejar los principios y prácticas democráticas en los planetas imaginados de Star Trek. Para una descripción detallada de cada indicador, ver Cuadro 1.</p>
+<div class="cuadro-destacado">
+<p><strong>Cuadro 1: Indicadores del IST</strong></p>
+<ul>
+<li><strong>Libertad de asociación:</strong> Este indicador evalúa la libertad de asociación, incluyendo si los grupos de interés pueden formarse y operar libremente.</li>
+<li><strong>Elecciones limpias:</strong> Mide el grado de libertad y justicia en las elecciones nacionales.</li>
+<li><strong>Libertad de expresión:</strong> Evalúa la libertad de expresión y la presencia de medios de comunicación alternativos e independientes.</li>
+<li><strong>Funcionarias/os electas/os:</strong> Considera en qué medida los líderes son elegidos a través de elecciones periódicas y libres.</li>
+<li><strong>Sufragio:</strong> Se refiere al sufragio universal y si todas las personas adultas tienen derecho al voto.
+<em>Fuente: Elaboración propia con datos de V-Dem</em> <span class="citation">(<a href="#ref-teorell2023">Teorell et al. 2023</a>)</span></li>
+</ul>
+</div>
+<p>Aunque es importante que los índices compuestos estén <strong>teóricamente fundamentados</strong> y que la selección de indicadores se justifique en función de los fenómenos que se pretenden medir, el manual reconoce que <em>la discusión detallada de la teoría subyacente excede su alcance</em>. Por lo tanto, se hace hincapié en los métodos prácticos y las consideraciones metodológicas necesarias para construir un índice compuesto sólido, sin profundizar en el análisis teórico de la selección de indicadores.</p>
+<div id="datos-ficticios-para-la-construcción-del-índice-compuesto" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Datos Ficticios para la Construcción del Índice Compuesto<a href="introducción.html#datos-ficticios-para-la-construcción-del-índice-compuesto" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Como parte práctica de este manual, introducimos un conjunto de datos imaginarios que simulan indicadores del Índice de Democracia Electoral de V-Dem, adaptados al contexto del universo de Star Trek, denominado aquí como IST. Este conjunto de datos ha sido especialmente diseñado para incluir valores faltantes (NA), lo que nos permitirá demostrar la aplicación de técnicas de imputación, normalización, ponderación y agregación.</p>
+<p>Los datos representan mediciones hipotéticas para diez planetas del universo de Star Trek, incluyendo medidas de libertad de asociación, elecciones limpias, libertad de expresión, funcionarias/os electas/os y sufragio universal. En particular, los datos faltantes han sido introducidos de manera aleatoria en las variables <code>Libertad_asociacion</code> y <code>Sufragio</code> para simular la realidad de los conjuntos de datos incompletos con los que las y los investigadores a menudo deben trabajar.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="introducción.html#cb1-1" tabindex="-1"></a><span class="co"># Planetas del universo de Star Trek</span></span>
+<span id="cb1-2"><a href="introducción.html#cb1-2" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="introducción.html#cb1-3" tabindex="-1"></a>star_trek <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Vulcano&quot;</span>, <span class="st">&quot;Tierra&quot;</span>, <span class="st">&quot;Romulus&quot;</span>, <span class="st">&quot;Kronos&quot;</span>, <span class="st">&quot;Cardassia&quot;</span>,</span>
+<span id="cb1-4"><a href="introducción.html#cb1-4" tabindex="-1"></a>                      <span class="st">&quot;Ferenginar&quot;</span>, <span class="st">&quot;Bajor&quot;</span>, <span class="st">&quot;Betazed&quot;</span>, <span class="st">&quot;Trill&quot;</span>, <span class="st">&quot;Qo&#39;noS&quot;</span>)</span>
+<span id="cb1-5"><a href="introducción.html#cb1-5" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="introducción.html#cb1-6" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1-7"><a href="introducción.html#cb1-7" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="introducción.html#cb1-8" tabindex="-1"></a>datos_IST <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-9"><a href="introducción.html#cb1-9" tabindex="-1"></a>  <span class="at">Planeta =</span> star_trek,</span>
+<span id="cb1-10"><a href="introducción.html#cb1-10" tabindex="-1"></a>  <span class="at">Libertad_asociacion =</span> <span class="fu">runif</span>(<span class="dv">10</span>, <span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb1-11"><a href="introducción.html#cb1-11" tabindex="-1"></a>  <span class="at">Elecciones_limpias =</span> <span class="fu">runif</span>(<span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">100</span>),</span>
+<span id="cb1-12"><a href="introducción.html#cb1-12" tabindex="-1"></a>  <span class="at">Libertad_expresion =</span> <span class="fu">runif</span>(<span class="dv">10</span>, <span class="dv">0</span>, <span class="dv">1</span>), </span>
+<span id="cb1-13"><a href="introducción.html#cb1-13" tabindex="-1"></a>  <span class="at">Funcionarias_electas =</span> <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>),  </span>
+<span id="cb1-14"><a href="introducción.html#cb1-14" tabindex="-1"></a>  <span class="at">Sufragio =</span> <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-15"><a href="introducción.html#cb1-15" tabindex="-1"></a>)</span>
+<span id="cb1-16"><a href="introducción.html#cb1-16" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="introducción.html#cb1-17" tabindex="-1"></a><span class="co"># Relación entre Libertad_asociacion y Libertad_expresion</span></span>
+<span id="cb1-18"><a href="introducción.html#cb1-18" tabindex="-1"></a>datos_IST<span class="sc">$</span>Libertad_expresion <span class="ot">&lt;-</span> datos_IST<span class="sc">$</span>Libertad_expresion <span class="sc">+</span> datos_IST<span class="sc">$</span>Libertad_asociacion <span class="sc">*</span> <span class="fl">0.1</span></span>
+<span id="cb1-19"><a href="introducción.html#cb1-19" tabindex="-1"></a>datos_IST<span class="sc">$</span>Libertad_expresion <span class="ot">&lt;-</span> <span class="fu">pmax</span>(<span class="fu">pmin</span>(datos_IST<span class="sc">$</span>Libertad_expresion, <span class="dv">1</span>), <span class="dv">0</span>)</span>
+<span id="cb1-20"><a href="introducción.html#cb1-20" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="introducción.html#cb1-21" tabindex="-1"></a><span class="co"># Relación entre Sufragio y Libertad_expresion</span></span>
+<span id="cb1-22"><a href="introducción.html#cb1-22" tabindex="-1"></a>libertad_expresion_normalizada <span class="ot">&lt;-</span> (datos_IST<span class="sc">$</span>Libertad_expresion <span class="sc">-</span></span>
+<span id="cb1-23"><a href="introducción.html#cb1-23" tabindex="-1"></a>                                     <span class="fu">min</span>(datos_IST<span class="sc">$</span>Libertad_expresion)) <span class="sc">/</span></span>
+<span id="cb1-24"><a href="introducción.html#cb1-24" tabindex="-1"></a>  (<span class="fu">max</span>(datos_IST<span class="sc">$</span>Libertad_expresion) <span class="sc">-</span> <span class="fu">min</span>(datos_IST<span class="sc">$</span>Libertad_expresion))</span>
+<span id="cb1-25"><a href="introducción.html#cb1-25" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="introducción.html#cb1-26" tabindex="-1"></a>datos_IST<span class="sc">$</span>Sufragio <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">runif</span>(<span class="dv">10</span>) <span class="sc">&lt;</span> libertad_expresion_normalizada, <span class="dv">1</span>, datos_IST<span class="sc">$</span>Sufragio)</span>
+<span id="cb1-27"><a href="introducción.html#cb1-27" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="introducción.html#cb1-28" tabindex="-1"></a><span class="co"># Datos faltantes de manera aleatoria</span></span>
+<span id="cb1-29"><a href="introducción.html#cb1-29" tabindex="-1"></a>na_libertad_asociacion <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="dv">2</span>)</span>
+<span id="cb1-30"><a href="introducción.html#cb1-30" tabindex="-1"></a>datos_IST<span class="sc">$</span>Libertad_asociacion[na_libertad_asociacion] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb1-31"><a href="introducción.html#cb1-31" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="introducción.html#cb1-32" tabindex="-1"></a>na_sufragio <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="dv">2</span>)</span>
+<span id="cb1-33"><a href="introducción.html#cb1-33" tabindex="-1"></a>datos_IST<span class="sc">$</span>Sufragio[na_sufragio] <span class="ot">&lt;-</span> <span class="cn">NA</span></span></code></pre></div>
+<p>A continuación, se presenta la tabla con los datos:</p>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-3">Table 2.1: </span>Indicadores del IST
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Planeta
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Libertad_asociacion
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Elecciones_limpias
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Libertad_expresion
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Funcionarias_electas
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Sufragio
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Vulcano
+</td>
+<td style="text-align:right;">
+0.2875775
+</td>
+<td style="text-align:right;">
+96.11500
+</td>
+<td style="text-align:right;">
+0.9182971
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Tierra
+</td>
+<td style="text-align:right;">
+0.7883051
+</td>
+<td style="text-align:right;">
+50.80007
+</td>
+<td style="text-align:right;">
+0.7716339
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Romulus
+</td>
+<td style="text-align:right;">
+0.4089769
+</td>
+<td style="text-align:right;">
+70.98136
+</td>
+<td style="text-align:right;">
+0.6814045
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Kronos
+</td>
+<td style="text-align:right;">
+0.8830174
+</td>
+<td style="text-align:right;">
+61.53701
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Cardassia
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+19.26322
+</td>
+<td style="text-align:right;">
+0.7497525
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Ferenginar
+</td>
+<td style="text-align:right;">
+0.0455565
+</td>
+<td style="text-align:right;">
+90.98425
+</td>
+<td style="text-align:right;">
+0.7130861
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Bajor
+</td>
+<td style="text-align:right;">
+0.5281055
+</td>
+<td style="text-align:right;">
+32.14790
+</td>
+<td style="text-align:right;">
+0.5968766
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Betazed
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+13.78536
+</td>
+<td style="text-align:right;">
+0.6833839
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Trill
+</td>
+<td style="text-align:right;">
+0.5514350
+</td>
+<td style="text-align:right;">
+39.51286
+</td>
+<td style="text-align:right;">
+0.3443032
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Qo’noS
+</td>
+<td style="text-align:right;">
+0.4566147
+</td>
+<td style="text-align:right;">
+95.90533
+</td>
+<td style="text-align:right;">
+0.1927751
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-teorell2023" class="csl-entry">
+Teorell, J. et al. 2023. <em>Varieties of Democracy (v-Dem) Project</em>. <a href="https://doi.org/10.23696/vdemds23">https://doi.org/10.23696/vdemds23</a>.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="imputación-de-datos-faltantes.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/index.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

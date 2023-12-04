@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 3 Imputación de Datos Faltantes | Manual de Construcción de Índices Compuestos</title>
+  <meta name="description" content="Guía práctica para crear índices compuestos con R" />
+  <meta name="generator" content="bookdown 0.36 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 3 Imputación de Datos Faltantes | Manual de Construcción de Índices Compuestos" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Guía práctica para crear índices compuestos con R" />
+  <meta name="github-repo" content="lesflores/composite_indicator_r" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 3 Imputación de Datos Faltantes | Manual de Construcción de Índices Compuestos" />
+  
+  <meta name="twitter:description" content="Guía práctica para crear índices compuestos con R" />
+  
+
+<meta name="author" content="Lesly Estefania Flores Rivera" />
+
+
+<meta name="date" content="2023-01-01" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="introducción.html"/>
+<link rel="next" href="análisis-multivariado.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Índices Compuestos</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Sobre este Manual</a></li>
+<li class="chapter" data-level="2" data-path="introducción.html"><a href="introducción.html"><i class="fa fa-check"></i><b>2</b> Introducción</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introducción.html"><a href="introducción.html#datos-ficticios-para-la-construcción-del-índice-compuesto"><i class="fa fa-check"></i><b>2.1</b> Datos Ficticios para la Construcción del Índice Compuesto</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="imputación-de-datos-faltantes.html"><a href="imputación-de-datos-faltantes.html"><i class="fa fa-check"></i><b>3</b> Imputación de Datos Faltantes</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="imputación-de-datos-faltantes.html"><a href="imputación-de-datos-faltantes.html#imputación-por-media-y-moda"><i class="fa fa-check"></i><b>3.1</b> Imputación por Media y Moda</a></li>
+<li class="chapter" data-level="3.2" data-path="imputación-de-datos-faltantes.html"><a href="imputación-de-datos-faltantes.html#imputación-por-modelos-de-regresión"><i class="fa fa-check"></i><b>3.2</b> Imputación por Modelos de Regresión</a></li>
+<li class="chapter" data-level="3.3" data-path="imputación-de-datos-faltantes.html"><a href="imputación-de-datos-faltantes.html#paquete-amelia"><i class="fa fa-check"></i><b>3.3</b> Paquete Amelia</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="análisis-multivariado.html"><a href="análisis-multivariado.html"><i class="fa fa-check"></i><b>4</b> Análisis Multivariado</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="análisis-multivariado.html"><a href="análisis-multivariado.html#análisis-factorial-para-datos-mixtos"><i class="fa fa-check"></i><b>4.1</b> Análisis Factorial para Datos Mixtos</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="normalización.html"><a href="normalización.html"><i class="fa fa-check"></i><b>5</b> Normalización</a></li>
+<li class="chapter" data-level="6" data-path="selección-de-variables.html"><a href="selección-de-variables.html"><i class="fa fa-check"></i><b>6</b> Selección de Variables</a></li>
+<li class="chapter" data-level="7" data-path="ponderación-y-agregación.html"><a href="ponderación-y-agregación.html"><i class="fa fa-check"></i><b>7</b> Ponderación y Agregación</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="ponderación-y-agregación.html"><a href="ponderación-y-agregación.html#enfoque-1-inclusión-de-todas-las-variables"><i class="fa fa-check"></i><b>7.1</b> Enfoque 1: Inclusión de todas las Variables</a></li>
+<li class="chapter" data-level="7.2" data-path="ponderación-y-agregación.html"><a href="ponderación-y-agregación.html#enfoque-2-selección-de-las-variables-más-significativas-identificadas-en-el-famd"><i class="fa fa-check"></i><b>7.2</b> Enfoque 2: Selección de las variables más significativas identificadas en el FAMD</a></li>
+<li class="chapter" data-level="7.3" data-path="ponderación-y-agregación.html"><a href="ponderación-y-agregación.html#enfoque-3-varianza-explicativa-famd"><i class="fa fa-check"></i><b>7.3</b> Enfoque 3: Varianza Explicativa FAMD</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="validación.html"><a href="validación.html"><i class="fa fa-check"></i><b>8</b> Validación</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Manual de Construcción de Índices Compuestos</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="imputación-de-datos-faltantes" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">Capítulo 3</span> Imputación de Datos Faltantes<a href="imputación-de-datos-faltantes.html#imputación-de-datos-faltantes" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>La ausencia de datos puede abordarse de dos maneras: <em>eliminando las observaciones con datos faltantes</em> o <em>aplicando técnicas de imputación</em> para estimar los valores ausentes. Esta sección se centra en métodos de imputación que permiten utilizar todos los casos disponibles en el conjunto de datos.</p>
+<p>Durante esta práctica, aplicaremos la imputación por la media para datos continuos con una distribución uniforme y la moda para datos categóricos. También aplicaremos métodos de regresión lineal y logística para estimar los valores faltantes, basándonos en relaciones observadas entre las variables.</p>
+<p>Es importante mencionar que cada método de imputación tiene sus propias fortalezas y limitaciones y debe elegirse con cuidado, teniendo en cuenta la naturaleza de los datos y el patrón de datos faltantes.</p>
+<div id="imputación-por-media-y-moda" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Imputación por Media y Moda<a href="imputación-de-datos-faltantes.html#imputación-por-media-y-moda" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Para datos númericos que siguen una distribución normal, la imputación se puede realizar empleado la media que sustituye los valores faltantes con la media aritmética de las observaciones disponibles.</p>
+<p>En el caso de los datos categóricos, la imputación se puede realizar empleando la moda, que es el valor más frecuente en el conjunto de datos.</p>
+<p>En el siguiente código de R, utilizamos la función <code>mean</code> para calcular la media de la variable cuantitativa <code>Libertad_asociacion</code>, excluyendo los valores NA con el argumento <code>na.rm = TRUE</code>. De manera similar, calculamos la moda para la variable categórica <code>Sufragio</code> usando la función <code>Mode</code> de la librería <code>DescTools</code>. Estos valores calculados se utilizan para sustituir los datos faltantes en el conjunto de datos datos_IST.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="imputación-de-datos-faltantes.html#cb2-1" tabindex="-1"></a><span class="co"># Librería para calcular la moda</span></span>
+<span id="cb2-2"><a href="imputación-de-datos-faltantes.html#cb2-2" tabindex="-1"></a><span class="fu">library</span>(DescTools)</span>
+<span id="cb2-3"><a href="imputación-de-datos-faltantes.html#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="imputación-de-datos-faltantes.html#cb2-4" tabindex="-1"></a><span class="co"># Calcular la media de Libertad_asociacion</span></span>
+<span id="cb2-5"><a href="imputación-de-datos-faltantes.html#cb2-5" tabindex="-1"></a>media_libertad_asociacion <span class="ot">&lt;-</span> <span class="fu">mean</span>(datos_IST<span class="sc">$</span>Libertad_asociacion, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-6"><a href="imputación-de-datos-faltantes.html#cb2-6" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="imputación-de-datos-faltantes.html#cb2-7" tabindex="-1"></a><span class="co"># Calcular la moda de Sufragio</span></span>
+<span id="cb2-8"><a href="imputación-de-datos-faltantes.html#cb2-8" tabindex="-1"></a>moda_sufragio <span class="ot">&lt;-</span> <span class="fu">Mode</span>(datos_IST<span class="sc">$</span>Sufragio, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-9"><a href="imputación-de-datos-faltantes.html#cb2-9" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="imputación-de-datos-faltantes.html#cb2-10" tabindex="-1"></a><span class="co"># Imputación de Libertad_asociacion con la media y Sufragio con la moda</span></span>
+<span id="cb2-11"><a href="imputación-de-datos-faltantes.html#cb2-11" tabindex="-1"></a>datos_IST_imputados_1 <span class="ot">&lt;-</span> datos_IST</span>
+<span id="cb2-12"><a href="imputación-de-datos-faltantes.html#cb2-12" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="imputación-de-datos-faltantes.html#cb2-13" tabindex="-1"></a>datos_IST_imputados_1<span class="sc">$</span>Libertad_asociacion[<span class="fu">is.na</span>(datos_IST_imputados_1<span class="sc">$</span>Libertad_asociacion)] <span class="ot">&lt;-</span> media_libertad_asociacion</span>
+<span id="cb2-14"><a href="imputación-de-datos-faltantes.html#cb2-14" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="imputación-de-datos-faltantes.html#cb2-15" tabindex="-1"></a>datos_IST_imputados_1<span class="sc">$</span>Sufragio[<span class="fu">is.na</span>(datos_IST_imputados_1<span class="sc">$</span>Sufragio)] <span class="ot">&lt;-</span> moda_sufragio</span></code></pre></div>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-5">Table 3.1: </span>Indicadores del IST con Imputación
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Planeta
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Libertad_asociacion
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Elecciones_limpias
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Libertad_expresion
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Funcionarias_electas
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Sufragio
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Vulcano
+</td>
+<td style="text-align:right;">
+0.2875775
+</td>
+<td style="text-align:right;">
+96.11500
+</td>
+<td style="text-align:right;">
+0.9182971
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Tierra
+</td>
+<td style="text-align:right;">
+0.7883051
+</td>
+<td style="text-align:right;">
+50.80007
+</td>
+<td style="text-align:right;">
+0.7716339
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Romulus
+</td>
+<td style="text-align:right;">
+0.4089769
+</td>
+<td style="text-align:right;">
+70.98136
+</td>
+<td style="text-align:right;">
+0.6814045
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Kronos
+</td>
+<td style="text-align:right;">
+0.8830174
+</td>
+<td style="text-align:right;">
+61.53701
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Cardassia
+</td>
+<td style="text-align:right;">
+0.4936986
+</td>
+<td style="text-align:right;">
+19.26322
+</td>
+<td style="text-align:right;">
+0.7497525
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Ferenginar
+</td>
+<td style="text-align:right;">
+0.0455565
+</td>
+<td style="text-align:right;">
+90.98425
+</td>
+<td style="text-align:right;">
+0.7130861
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Bajor
+</td>
+<td style="text-align:right;">
+0.5281055
+</td>
+<td style="text-align:right;">
+32.14790
+</td>
+<td style="text-align:right;">
+0.5968766
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Betazed
+</td>
+<td style="text-align:right;">
+0.4936986
+</td>
+<td style="text-align:right;">
+13.78536
+</td>
+<td style="text-align:right;">
+0.6833839
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Trill
+</td>
+<td style="text-align:right;">
+0.5514350
+</td>
+<td style="text-align:right;">
+39.51286
+</td>
+<td style="text-align:right;">
+0.3443032
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Qo’noS
+</td>
+<td style="text-align:right;">
+0.4566147
+</td>
+<td style="text-align:right;">
+95.90533
+</td>
+<td style="text-align:right;">
+0.1927751
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="imputación-por-modelos-de-regresión" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Imputación por Modelos de Regresión<a href="imputación-de-datos-faltantes.html#imputación-por-modelos-de-regresión" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>La regresión lineal puede emplearse para predecir y reemplazar datos faltantes cuando existe una relación lineal entre variables. Este método presupone que los datos faltan al azar, lo que implica que la ausencia de datos está asociada únicamente con variables observables y no con los valores faltantes.</p>
+<p>Además de asumir el azar en los datos faltantes, los modelos de regresión presuponen una distribución normal de los residuos. Estos modelos se pueden adaptar para datos continuos, discretos y categóricos (mediante modelos logit o probit).</p>
+<p>Para identificar la mejor variable predictora, se recomienda realizar un análisis de correlación que permita detectar la correlación más fuerte. En este manual se ilustran con la regresión lineal simple y regresión logística simple, sin embargo, si se observan más variables con correlaciones altas, también es posible aplicar modelos de regresión múltiple.</p>
+<p>En el siguiente código de R, utilizamos la función <code>cor</code> para calcular las correlaciones de Spearman y visualizamos la matriz de correlación usando <code>ggcorrplot</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="imputación-de-datos-faltantes.html#cb3-1" tabindex="-1"></a><span class="fu">library</span>(ggcorrplot)</span>
+<span id="cb3-2"><a href="imputación-de-datos-faltantes.html#cb3-2" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="imputación-de-datos-faltantes.html#cb3-3" tabindex="-1"></a><span class="co"># Correlación de Spearman para variables continuas y dicotómicas </span></span>
+<span id="cb3-4"><a href="imputación-de-datos-faltantes.html#cb3-4" tabindex="-1"></a>correlaciones <span class="ot">&lt;-</span> <span class="fu">cor</span>(datos_IST[, <span class="fu">c</span>(<span class="st">&quot;Libertad_asociacion&quot;</span>,</span>
+<span id="cb3-5"><a href="imputación-de-datos-faltantes.html#cb3-5" tabindex="-1"></a>                                   <span class="st">&quot;Elecciones_limpias&quot;</span>,</span>
+<span id="cb3-6"><a href="imputación-de-datos-faltantes.html#cb3-6" tabindex="-1"></a>                                   <span class="st">&quot;Libertad_expresion&quot;</span>,</span>
+<span id="cb3-7"><a href="imputación-de-datos-faltantes.html#cb3-7" tabindex="-1"></a>                                   <span class="st">&quot;Funcionarias_electas&quot;</span>, </span>
+<span id="cb3-8"><a href="imputación-de-datos-faltantes.html#cb3-8" tabindex="-1"></a>                                   <span class="st">&quot;Sufragio&quot;</span>)], </span>
+<span id="cb3-9"><a href="imputación-de-datos-faltantes.html#cb3-9" tabindex="-1"></a>                     <span class="at">method =</span> <span class="st">&quot;spearman&quot;</span>, <span class="at">use =</span> <span class="st">&quot;complete.obs&quot;</span>)<span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">1</span>)</span>
+<span id="cb3-10"><a href="imputación-de-datos-faltantes.html#cb3-10" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="imputación-de-datos-faltantes.html#cb3-11" tabindex="-1"></a><span class="fu">ggcorrplot</span>(correlaciones,<span class="at">type=</span><span class="st">&quot;lower&quot;</span>,<span class="at">lab=</span>T,<span class="at">show.legend=</span>T)</span></code></pre></div>
+<p><img src="figures/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Seleccionamos <code>Elecciones_limpias</code> para imputar valores en <code>Libertad_asociacion</code> en una regresión lineal, utilizando la función <code>lm</code>. Esta decisión de basa en la correlación moderada de -0.6 entre ambas variables.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="imputación-de-datos-faltantes.html#cb4-1" tabindex="-1"></a><span class="co"># Modelo lm</span></span>
+<span id="cb4-2"><a href="imputación-de-datos-faltantes.html#cb4-2" tabindex="-1"></a>datos_IST_imputados_2 <span class="ot">&lt;-</span> datos_IST</span>
+<span id="cb4-3"><a href="imputación-de-datos-faltantes.html#cb4-3" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="imputación-de-datos-faltantes.html#cb4-4" tabindex="-1"></a>modelo_libertad <span class="ot">&lt;-</span> <span class="fu">lm</span>(Libertad_asociacion <span class="sc">~</span> Elecciones_limpias, <span class="at">data =</span> datos_IST_imputados_2, <span class="at">na.action =</span> na.exclude)</span>
+<span id="cb4-5"><a href="imputación-de-datos-faltantes.html#cb4-5" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="imputación-de-datos-faltantes.html#cb4-6" tabindex="-1"></a><span class="co"># Predecir los valores faltantes de Libertad_asociacion</span></span>
+<span id="cb4-7"><a href="imputación-de-datos-faltantes.html#cb4-7" tabindex="-1"></a>predicciones_libertad <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_libertad, <span class="at">newdata =</span> datos_IST)</span>
+<span id="cb4-8"><a href="imputación-de-datos-faltantes.html#cb4-8" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="imputación-de-datos-faltantes.html#cb4-9" tabindex="-1"></a><span class="co"># Imputar los valores predichos</span></span>
+<span id="cb4-10"><a href="imputación-de-datos-faltantes.html#cb4-10" tabindex="-1"></a>datos_IST_imputados_2<span class="sc">$</span>Libertad_asociacion[<span class="fu">is.na</span>(datos_IST_imputados_2<span class="sc">$</span>Libertad_asociacion)] <span class="ot">&lt;-</span> predicciones_libertad[<span class="fu">is.na</span>(datos_IST_imputados_2<span class="sc">$</span>Libertad_asociacion)]</span></code></pre></div>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-8">Table 3.2: </span>Indicadores del IST con Imputación
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Planeta
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Libertad_asociacion
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Elecciones_limpias
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Libertad_expresion
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Funcionarias_electas
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Sufragio
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Vulcano
+</td>
+<td style="text-align:right;">
+0.2875775
+</td>
+<td style="text-align:right;">
+96.11500
+</td>
+<td style="text-align:right;">
+0.9182971
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Tierra
+</td>
+<td style="text-align:right;">
+0.7883051
+</td>
+<td style="text-align:right;">
+50.80007
+</td>
+<td style="text-align:right;">
+0.7716339
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Romulus
+</td>
+<td style="text-align:right;">
+0.4089769
+</td>
+<td style="text-align:right;">
+70.98136
+</td>
+<td style="text-align:right;">
+0.6814045
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Kronos
+</td>
+<td style="text-align:right;">
+0.8830174
+</td>
+<td style="text-align:right;">
+61.53701
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Cardassia
+</td>
+<td style="text-align:right;">
+0.7882354
+</td>
+<td style="text-align:right;">
+19.26322
+</td>
+<td style="text-align:right;">
+0.7497525
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Ferenginar
+</td>
+<td style="text-align:right;">
+0.0455565
+</td>
+<td style="text-align:right;">
+90.98425
+</td>
+<td style="text-align:right;">
+0.7130861
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Bajor
+</td>
+<td style="text-align:right;">
+0.5281055
+</td>
+<td style="text-align:right;">
+32.14790
+</td>
+<td style="text-align:right;">
+0.5968766
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Betazed
+</td>
+<td style="text-align:right;">
+0.8218593
+</td>
+<td style="text-align:right;">
+13.78536
+</td>
+<td style="text-align:right;">
+0.6833839
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Trill
+</td>
+<td style="text-align:right;">
+0.5514350
+</td>
+<td style="text-align:right;">
+39.51286
+</td>
+<td style="text-align:right;">
+0.3443032
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Qo’noS
+</td>
+<td style="text-align:right;">
+0.4566147
+</td>
+<td style="text-align:right;">
+95.90533
+</td>
+<td style="text-align:right;">
+0.1927751
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Para imputar <code>Sufragio</code> elegimos <code>Libertad_expresion</code> como predictor en la regresión logística, utilizando la función <code>glm</code>. Esta decisión se basa en la correlación de 0.8 entre ambas variables.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="imputación-de-datos-faltantes.html#cb5-1" tabindex="-1"></a><span class="co"># Modelo glm</span></span>
+<span id="cb5-2"><a href="imputación-de-datos-faltantes.html#cb5-2" tabindex="-1"></a>datos_IST_imputados_3 <span class="ot">&lt;-</span> datos_IST_imputados_2</span>
+<span id="cb5-3"><a href="imputación-de-datos-faltantes.html#cb5-3" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="imputación-de-datos-faltantes.html#cb5-4" tabindex="-1"></a>modelo_sufragio <span class="ot">&lt;-</span> <span class="fu">glm</span>(Sufragio <span class="sc">~</span> Libertad_expresion, <span class="at">family =</span> binomial, <span class="at">data =</span> datos_IST_imputados_3, <span class="at">na.action =</span> na.exclude)</span>
+<span id="cb5-5"><a href="imputación-de-datos-faltantes.html#cb5-5" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="imputación-de-datos-faltantes.html#cb5-6" tabindex="-1"></a><span class="co"># Predecir los valores faltantes de Sufragio</span></span>
+<span id="cb5-7"><a href="imputación-de-datos-faltantes.html#cb5-7" tabindex="-1"></a>predicciones_sufragio <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_sufragio, <span class="at">newdata =</span> datos_IST[<span class="fu">is.na</span>(datos_IST_imputados_2<span class="sc">$</span>Sufragio), ], <span class="at">type =</span> <span class="st">&quot;response&quot;</span>)</span>
+<span id="cb5-8"><a href="imputación-de-datos-faltantes.html#cb5-8" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="imputación-de-datos-faltantes.html#cb5-9" tabindex="-1"></a><span class="co"># Imputar los valores predichos</span></span>
+<span id="cb5-10"><a href="imputación-de-datos-faltantes.html#cb5-10" tabindex="-1"></a>datos_IST_imputados_3<span class="sc">$</span>Sufragio[<span class="fu">is.na</span>(datos_IST_imputados_3<span class="sc">$</span>Sufragio)] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(predicciones_sufragio <span class="sc">&gt;</span> <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span></code></pre></div>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-10">Table 3.3: </span>Indicadores del IST con Imputación
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Planeta
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Libertad_asociacion
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Elecciones_limpias
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Libertad_expresion
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Funcionarias_electas
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Sufragio
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Vulcano
+</td>
+<td style="text-align:right;">
+0.2875775
+</td>
+<td style="text-align:right;">
+96.11500
+</td>
+<td style="text-align:right;">
+0.9182971
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Tierra
+</td>
+<td style="text-align:right;">
+0.7883051
+</td>
+<td style="text-align:right;">
+50.80007
+</td>
+<td style="text-align:right;">
+0.7716339
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Romulus
+</td>
+<td style="text-align:right;">
+0.4089769
+</td>
+<td style="text-align:right;">
+70.98136
+</td>
+<td style="text-align:right;">
+0.6814045
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Kronos
+</td>
+<td style="text-align:right;">
+0.8830174
+</td>
+<td style="text-align:right;">
+61.53701
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Cardassia
+</td>
+<td style="text-align:right;">
+0.7882354
+</td>
+<td style="text-align:right;">
+19.26322
+</td>
+<td style="text-align:right;">
+0.7497525
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Ferenginar
+</td>
+<td style="text-align:right;">
+0.0455565
+</td>
+<td style="text-align:right;">
+90.98425
+</td>
+<td style="text-align:right;">
+0.7130861
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Bajor
+</td>
+<td style="text-align:right;">
+0.5281055
+</td>
+<td style="text-align:right;">
+32.14790
+</td>
+<td style="text-align:right;">
+0.5968766
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Betazed
+</td>
+<td style="text-align:right;">
+0.8218593
+</td>
+<td style="text-align:right;">
+13.78536
+</td>
+<td style="text-align:right;">
+0.6833839
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Trill
+</td>
+<td style="text-align:right;">
+0.5514350
+</td>
+<td style="text-align:right;">
+39.51286
+</td>
+<td style="text-align:right;">
+0.3443032
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: black !important;">
+Qo’noS
+</td>
+<td style="text-align:right;">
+0.4566147
+</td>
+<td style="text-align:right;">
+95.90533
+</td>
+<td style="text-align:right;">
+0.1927751
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="paquete-amelia" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Paquete Amelia<a href="imputación-de-datos-faltantes.html#paquete-amelia" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><strong>incompleto</strong>
+Amelia aplica la imputación múltiple utilizando el enfoque Expectation-Maximization with Bootstrapping (EMB). Este procedimiento crea múltiples conjuntos de datos completos, permitiendo la representación de la incertidumbre en las estimaciones de parámetros resultantes de la imputación <span class="citation">(<a href="#ref-honaker2011">J. Honaker 2011</a>)</span>.</p>
+<p>Amelia es útil en conjuntos de datos con variables de diversos tipos, como continuas, discretas y categóricas. Al igual que con los modelos de regresión, Amelia asume que los datos faltan al azar.</p>
+</div>
+</div>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-honaker2011" class="csl-entry">
+J. Honaker, M. Blackwell, G. King. 2011. <em>Amelia II: A Program for Missing Data</em>. <em>Journal of Statistical Software</em>. Vol. 45.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="introducción.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="análisis-multivariado.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/index.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
